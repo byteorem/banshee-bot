@@ -5,6 +5,7 @@ A Discord bot for World of Warcraft guild management, built with Python and Pyco
 ## Features
 
 - Guild settings management (guild name, region, realm)
+- Custom commands system for guild resources and information
 - More features coming soon!
 
 ## Setup
@@ -53,17 +54,50 @@ Example:
 /settings guild "Awesome Guild" us "Area 52"
 ```
 
+### Custom Commands
+
+Custom commands allow guild admins to create reusable commands that any member can trigger with the `!` prefix. Perfect for loot policies, guild rules, helpful links, and more.
+
+#### Management Commands (Admin Only)
+
+- `/newcommand create` - Opens a form to create a new custom command
+- `/newcommand list` - Shows all custom commands for your guild
+- `/newcommand view <name>` - View the content of a specific command
+- `/newcommand edit <name>` - Edit an existing command (opens pre-filled form)
+- `/newcommand delete <name>` - Delete a command (requires confirmation)
+
+#### Using Custom Commands
+
+Any member can trigger custom commands:
+```
+!lootpolicy
+!raidtimes
+!resources
+```
+
+**Features:**
+- Command responses are sent as replies (visible to everyone)
+- Supports full Discord markdown formatting
+- Command names must be lowercase alphanumeric with underscores only
+- Each guild has its own set of custom commands
+
+**Example Workflow:**
+1. Admin runs `/newcommand create`
+2. In the form, enters name: `lootpolicy` and content: `**Loot Policy**: All gear is distributed via council...`
+3. Members can now use `!lootpolicy` to see the policy
+
 ## Project Structure
 ```
 banshee-bot/
-├── main.py              # Entry point
-├── core/                # Core bot functionality
-│   ├── bot.py          # Bot class
-│   ├── context.py      # Custom context
-│   └── models.py       # Database models
-├── cogs/                # Command modules
-│   └── settings.py     # Settings commands
-└── data/                # SQLite database (auto-generated)
+├── main.py                  # Entry point
+├── core/                    # Core bot functionality
+│   ├── bot.py              # Bot class
+│   ├── context.py          # Custom context
+│   └── models.py           # Database models
+├── cogs/                    # Command modules
+│   ├── settings.py         # Settings commands
+│   └── custom_commands.py  # Custom commands system
+└── data/                    # SQLite database (auto-generated)
 ```
 
 ## Tech Stack

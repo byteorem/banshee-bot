@@ -2,12 +2,13 @@ from discord.ext import commands
 
 from .bot import Banshee
 from .context import Context
-from .models import GuildSettings
+from .models import CustomCommand, GuildSettings
 
 __all__ = (
     "Banshee",
     "Cog",
     "Context",
+    "CustomCommand",
     "GuildSettings",
 )
 

@@ -9,10 +9,13 @@ from .context import Context
 
 class Banshee(commands.Bot):
     def __init__(self) -> None:
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.messages = True
         super().__init__(
             auto_sync_commands=False,
             help_command=None,
-            intents=discord.Intents.default()
+            intents=intents
         )
 
     async def setup_tortoise(self) -> None:
@@ -32,21 +35,21 @@ class Banshee(commands.Bot):
         return await super().close()
 
     async def get_application_context(
-        self, interaction: discord.Interaction
+        self, interaction: discord.Interaction, cls: type[Context] = Context
     ) -> Context:
-        return Context(self, interaction)
+        return cls(self, interaction)
 
     async def on_ready(self) -> None:
         print(f"{self.user} is ready")
 
-    async def on_application_command_error(self, ctx: Context, error: Exception):
-        if isinstance(error, discord.ApplicationCommandInvokeError):
-            error = error.original
+    async def on_application_command_error(self, context: discord.ApplicationContext, exception: Exception):
+        if isinstance(exception, discord.ApplicationCommandInvokeError):
+            exception = exception.original
 
-        await ctx.respond(
+        await context.respond(
             embed=discord.Embed(
-                title=error.__class__.__name__,
-                description=str(error),
+                title=exception.__class__.__name__,
+                description=str(exception),
                 color=discord.Color.red(),
             )
         )
