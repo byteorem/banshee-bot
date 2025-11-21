@@ -88,12 +88,9 @@ class CustomCommands(Cog):
         # Validate command name
         command_name = modal.command_name.lower().strip()
         if not re.match(r"^[a-z0-9_]+$", command_name):
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Invalid Command Name",
-                    description="Command names can only contain lowercase letters, numbers, and underscores.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Invalid Command Name",
+                "Command names can only contain lowercase letters, numbers, and underscores.",
                 ephemeral=True,
             )
 
@@ -102,12 +99,9 @@ class CustomCommands(Cog):
             discord_guild_id=ctx.guild.id, command_name=command_name
         )
         if existing:
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Command Already Exists",
-                    description=f"A command named `{command_name}` already exists. Use `/newcommand edit` to modify it.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Command Already Exists",
+                f"A command named `{command_name}` already exists. Use `/newcommand edit` to modify it.",
                 ephemeral=True,
             )
 
@@ -119,12 +113,9 @@ class CustomCommands(Cog):
             created_by=ctx.author.id,
         )
 
-        await ctx.respond(
-            embed=discord.Embed(
-                title="Command Created",
-                description=f"Custom command `!{command_name}` has been created successfully.",
-                color=discord.Color.green(),
-            ),
+        await ctx.success(
+            "Command Created",
+            f"Custom command `!{command_name}` has been created successfully.",
             ephemeral=True,
         )
 
@@ -138,12 +129,9 @@ class CustomCommands(Cog):
         ).all()
 
         if not commands_list:
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="No Custom Commands",
-                    description="No custom commands have been created yet. Use `/newcommand create` to add one.",
-                    color=discord.Color.blurple(),
-                ),
+            return await ctx.info(
+                "No Custom Commands",
+                "No custom commands have been created yet. Use `/newcommand create` to add one.",
                 ephemeral=True,
             )
 
@@ -173,12 +161,9 @@ class CustomCommands(Cog):
         )
 
         if not command:
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Command Not Found",
-                    description=f"No custom command named `{command_name}` exists.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Command Not Found",
+                f"No custom command named `{command_name}` exists.",
                 ephemeral=True,
             )
 
@@ -205,12 +190,9 @@ class CustomCommands(Cog):
         )
 
         if not command:
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Command Not Found",
-                    description=f"No custom command named `{command_name}` exists.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Command Not Found",
+                f"No custom command named `{command_name}` exists.",
                 ephemeral=True,
             )
 
@@ -226,12 +208,9 @@ class CustomCommands(Cog):
         # Validate new command name
         new_command_name = modal.command_name.lower().strip()
         if not re.match(r"^[a-z0-9_]+$", new_command_name):
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Invalid Command Name",
-                    description="Command names can only contain lowercase letters, numbers, and underscores.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Invalid Command Name",
+                "Command names can only contain lowercase letters, numbers, and underscores.",
                 ephemeral=True,
             )
 
@@ -241,12 +220,9 @@ class CustomCommands(Cog):
                 discord_guild_id=ctx.guild.id, command_name=new_command_name
             )
             if existing:
-                return await ctx.respond(
-                    embed=discord.Embed(
-                        title="Command Already Exists",
-                        description=f"A command named `{new_command_name}` already exists.",
-                        color=discord.Color.red(),
-                    ),
+                return await ctx.error(
+                    "Command Already Exists",
+                    f"A command named `{new_command_name}` already exists.",
                     ephemeral=True,
                 )
 
@@ -255,12 +231,9 @@ class CustomCommands(Cog):
         command.content = modal.content
         await command.save()
 
-        await ctx.respond(
-            embed=discord.Embed(
-                title="Command Updated",
-                description=f"Custom command `!{new_command_name}` has been updated successfully.",
-                color=discord.Color.green(),
-            ),
+        await ctx.success(
+            "Command Updated",
+            f"Custom command `!{new_command_name}` has been updated successfully.",
             ephemeral=True,
         )
 
@@ -278,12 +251,9 @@ class CustomCommands(Cog):
         )
 
         if not command:
-            return await ctx.respond(
-                embed=discord.Embed(
-                    title="Command Not Found",
-                    description=f"No custom command named `{command_name}` exists.",
-                    color=discord.Color.red(),
-                ),
+            return await ctx.error(
+                "Command Not Found",
+                f"No custom command named `{command_name}` exists.",
                 ephemeral=True,
             )
 
