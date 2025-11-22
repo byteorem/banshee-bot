@@ -104,5 +104,43 @@ banshee-bot/
 
 - **Discord Library**: Pycord
 - **Package Manager**: uv
-- **Database**: SQLite with Tortoise ORM
+- **Database**: SQLite (local) / PostgreSQL (production) with Tortoise ORM
 - **Environment**: python-dotenv
+
+
+## Local Development
+
+### Running Locally
+
+The bot uses SQLite by default for local development (no external database needed):
+
+```bash
+# Normal run
+uv run main.py
+
+# Sync commands with Discord (required after adding/modifying slash commands)
+uv run main.py --sync
+
+# Debug mode with separate bot token
+uv run main.py --debug
+```
+
+### Environment Configuration
+
+Create `.env` from `.env.example`:
+```bash
+cp .env.example .env
+```
+
+**Minimal local setup:**
+```env
+DISCORD_TOKEN=your_development_bot_token
+```
+
+**With debug token:**
+```env
+DISCORD_TOKEN=your_development_bot_token
+DEBUG_TOKEN=your_debug_bot_token
+```
+
+The bot will automatically use SQLite (`data/database.db`) when `DATABASE_URL` is not set.

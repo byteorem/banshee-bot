@@ -1,3 +1,4 @@
+import logging
 from os import environ, getenv, makedirs
 
 import discord
@@ -5,6 +6,8 @@ from discord.ext import commands
 from tortoise import Tortoise
 
 from .context import Context
+
+logger = logging.getLogger(__name__)
 
 
 class Banshee(commands.Bot):
@@ -19,8 +22,15 @@ class Banshee(commands.Bot):
         )
 
     async def setup_tortoise(self) -> None:
-        makedirs("data", exist_ok=True)
         db_url = getenv("DATABASE_URL", "sqlite://data/database.db")
+
+        # Only create data directory for SQLite
+        if db_url.startswith("sqlite"):
+            makedirs("data", exist_ok=True)
+            logger.info("Using SQLite database (local development)")
+        else:
+            logger.info(f"Using PostgreSQL database (production)")
+
         await Tortoise.init(
             db_url=db_url, modules={"models": ["core.models"]}
         )
@@ -58,7 +68,7 @@ class Banshee(commands.Bot):
         self, debug: bool = False, cogs: list[str] | None = None, sync: bool = False
     ) -> None:
         self.load_extensions(*cogs or ("cogs",))
-        
+
         if sync:
             async def on_connect() -> None:
                 await self.sync_commands(delete_existing=not debug)
@@ -66,5 +76,9 @@ class Banshee(commands.Bot):
 
             self.on_connect = on_connect
 
-        token = getenv("DEBUG_TOKEN" if debug else "TOKEN", getenv("TOKEN"))
+        token = getenv("DEBUG_TOKEN" if debug else "DISCORD_TOKEN", getenv("DISCORD_TOKEN"))
+
+        if not token:
+            raise ValueError("DISCORD_TOKEN environment variable is required")
+
         super().run(token)
